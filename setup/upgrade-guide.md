@@ -126,23 +126,9 @@ Laravel no longer adds a `:` to the end of the cache prefix. With Winter's defau
 
 > **Impacts:** Plugin developers.
 
-### Command names and registration
+### Command names
 
-Symfony Console 7 no longer uses the static `$defaultName` property of a command, and the `getDefaultName()` method now returns `null` unless the command class has an `#[AsCommand]` attribute. Commands still get their name from their `$signature` or `$name` property, so the `$defaultName` property can simply be removed.
-
-However, if your plugin registers commands using `getDefaultName()`, every one of those commands is registered under the same key and only the last one registered will be available. Nothing warns you about this: the other commands are simply missing from `php artisan list`, and scheduled tasks that run them fail.
-
-```php
-// Before Winter v1.3: each command was registered under its own name
-$this->registerConsoleCommand(ImportProducts::getDefaultName(), ImportProducts::class);
-$this->registerConsoleCommand(ExportProducts::getDefaultName(), ExportProducts::class);
-
-// From Winter v1.3: use a unique key for each command
-$this->registerConsoleCommand('acme.import-products', ImportProducts::class);
-$this->registerConsoleCommand('acme.export-products', ExportProducts::class);
-```
-
-The `getDefaultName()` method is deprecated and will be removed in Symfony 8, so avoid it even if you add the `#[AsCommand]` attribute to your commands.
+Symfony Console 7 no longer uses the static `$defaultName` property of a command. Commands still get their name from their `$signature` or `$name` property, so you can remove the `$defaultName` property from your commands.
 
 ### The `-s` shortcut for `--silent`
 
